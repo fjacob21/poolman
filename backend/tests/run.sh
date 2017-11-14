@@ -1,3 +1,3 @@
 #!/bin/bash
 cd ../src
-python3 -m unittest discover -s ../tests
+python3 -m unittest discover -v -s ../tests
