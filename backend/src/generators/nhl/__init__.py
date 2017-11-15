@@ -1,3 +1,4 @@
 from .nhlteamgenerator import NHLTeamGenerator
+from .nhlgamegenerator import NHLGameGenerator
 
-__all__ = [NHLTeamGenerator]
+__all__ = [NHLTeamGenerator, NHLGameGenerator]
