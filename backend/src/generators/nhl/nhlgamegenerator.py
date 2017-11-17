@@ -33,7 +33,7 @@ class NHLGameGenerator(object):
         away = game['teams']['away']['team']['id']
         away_score = game['teams']['away']['score']
         date = game['gameDate']
-        status = int(game['status']['statusCode'])
+        status = statuscode[int(game['status']['statusCode'])]
         link = game['link']
         content = game['content']['link']
         extra = self.create_nhl_extra_info(content, link)
