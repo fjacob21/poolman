@@ -4,6 +4,7 @@ from .game import GAME_STATE_FINISHED
 from .standing import create_standing
 from .matchupresult import MatchupResult
 from .matchup import create_matchup
+from .matchuptree import create_matchup_tree
 
 
 class PoolDataFactory(object):
@@ -36,3 +37,6 @@ class PoolDataFactory(object):
 
     def create_matchup_result(self, home_win=0, away_win=0, games=[]):
         return MatchupResult(home_win, away_win, games)
+
+    def create_matchup_tree():
+        return create_matchup_tree()
