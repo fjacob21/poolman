@@ -1,6 +1,7 @@
 from .team import create_team
 from .game import create_game, GAME_STATE_SCHEDULED, GAME_STATE_IN_PROGRESS
 from .game import GAME_STATE_FINISHED
+from .standing import create_standing
 
 
 class PoolDataFactory(object):
@@ -20,3 +21,9 @@ class PoolDataFactory(object):
                     home_goal=0, away_goal=0, extra_data=None):
         return create_game(home, away, date, state, home_goal, away_goal,
                            extra_data)
+
+    def create_standing(self, team_id=0, pts=0, win=0, losses=0, ot=0,
+                        games_played=0, goals_against=0, goals_scored=0,
+                        ranks=0, extra_info={}):
+        return create_standing(team_id, pts, win, losses, ot, games_played,
+                               goals_against, goals_scored, ranks, extra_info)
