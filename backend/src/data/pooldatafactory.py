@@ -2,6 +2,8 @@ from .team import create_team
 from .game import create_game, GAME_STATE_SCHEDULED, GAME_STATE_IN_PROGRESS
 from .game import GAME_STATE_FINISHED
 from .standing import create_standing
+from .matchupresult import MatchupResult
+from .matchup import create_matchup
 
 
 class PoolDataFactory(object):
@@ -27,3 +29,10 @@ class PoolDataFactory(object):
                         ranks=0, extra_info={}):
         return create_standing(team_id, pts, win, losses, ot, games_played,
                                goals_against, goals_scored, ranks, extra_info)
+
+    def create_matchup(self, id=0, round=0, home=0, away=0, start='',
+                       playoff=MatchupResult(), season=MatchupResult()):
+        return create_matchup(id, round, home, away, start, playoff, season)
+
+    def create_matchup_result(self, home_win=0, away_win=0, games=[]):
+        return MatchupResult(home_win, away_win, games)
