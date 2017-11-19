@@ -38,5 +38,5 @@ class PoolDataFactory(object):
     def create_matchup_result(self, home_win=0, away_win=0, games=[]):
         return MatchupResult(home_win, away_win, games)
 
-    def create_matchup_tree():
+    def create_matchup_tree(self):
         return create_matchup_tree()
