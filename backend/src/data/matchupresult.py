@@ -2,13 +2,15 @@ from .game import create_game, GAME_STATE_SCHEDULED, GAME_STATE_FINISHED
 from .powerdict import PowerDict
 
 
-def create_matchup_result(home_win=0, away_win=0, games=[]):
+def create_matchup_result(home_win=0, away_win=0, games=None):
     return MatchupResult(home_win, away_win, games)
 
 
 class MatchupResult(PowerDict):
 
-    def __init__(self, home_win=0, away_win=0, games=[]):
+    def __init__(self, home_win=0, away_win=0, games=None):
+        if not games:
+            games = []
         results = {}
         results['home_win'] = home_win
         results['away_win'] = away_win
@@ -25,3 +27,10 @@ class MatchupResult(PowerDict):
                 self.home_win = self.home_win + 1
             else:
                 self.away_win = self.away_win + 1
+        return game
+
+    def find_game(self, date):
+        for game in self.games:
+            if game.date == date:
+                return game
+        return None

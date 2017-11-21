@@ -4,16 +4,20 @@ from .powerdict import PowerDict
 
 
 def create_matchup(id=0, round=0, home=0, away=0, start='',
-                   playoff=MatchupResult(), season=MatchupResult()):
+                   playoff=None, season=None):
     return Matchup(id, round, home, away, start, playoff, season)
 
 
 class Matchup(PowerDict):
 
-    def __init__(self, id=0, round=0, home=0, away=0, start='',
-                 playoff=MatchupResult(), season=MatchupResult()):
+    def __init__(self, mid=0, round=0, home=0, away=0, start='',
+                 playoff=None, season=None):
+        if not playoff:
+            playoff = MatchupResult()
+        if not season:
+            season = MatchupResult()
         matchup = {}
-        matchup['id'] = id
+        matchup['id'] = mid
         matchup['home'] = home
         matchup['away'] = away
         matchup['round'] = round
@@ -24,16 +28,20 @@ class Matchup(PowerDict):
 
     def add_playoff_game(self, date='', state=GAME_STATE_SCHEDULED,
                          home_goal=0, away_goal=0, extra_data=None):
-        game = create_game(self.home, self.away, date, state, home_goal,
-                           away_goal, extra_data)
-        self.playoff.games.append(game)
-        return game
+        return self.playoff.add_game(self.home, self.away, date, state, home_goal,
+                                     away_goal, extra_data)
 
     def add_season_game(self, date, home_goal, away_goal, extra_data=None):
-        game = create_game(self.home, self.away, date, GAME_STATE_FINISHED,
-                           home_goal, away_goal, extra_data)
-        self.season.games.append(game)
-        return game
+        return self.season.add_game(self.home, self.away, date, GAME_STATE_FINISHED,
+                                    home_goal, away_goal, extra_data)
+
+    @property
+    def winner(self):
+        if self.playoff.home_win == 4:
+            return self.home
+        if self.playoff.away_win == 4:
+            return self.away
+        return None
 
     @property
     def started(self):

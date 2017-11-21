@@ -5,6 +5,7 @@ from .standing import create_standing
 from .matchupresult import MatchupResult
 from .matchup import create_matchup
 from .matchuptree import create_matchup_tree
+from .matchuptreenode import STATE_UNITIALIZED, STATE_NOT_STARTED, STATE_STARTED, STATE_FINISHED
 
 
 class PoolDataFactory(object):
@@ -13,6 +14,11 @@ class PoolDataFactory(object):
         self.GAME_STATE_SCHEDULED = GAME_STATE_SCHEDULED
         self.GAME_STATE_IN_PROGRESS = GAME_STATE_IN_PROGRESS
         self.GAME_STATE_FINISHED = GAME_STATE_FINISHED
+        
+        self.STATE_UNITIALIZED = STATE_UNITIALIZED
+        self.STATE_NOT_STARTED = STATE_NOT_STARTED
+        self.STATE_STARTED = STATE_STARTED
+        self.STATE_FINISHED = STATE_FINISHED
 
     def create_team(self, id=0, abbreviation='', name='', fullname='', city='',
                     active=False, creation_year=0, website='',
@@ -32,10 +38,10 @@ class PoolDataFactory(object):
                                goals_against, goals_scored, ranks, extra_info)
 
     def create_matchup(self, id=0, round=0, home=0, away=0, start='',
-                       playoff=MatchupResult(), season=MatchupResult()):
+                       playoff=None, season=None):
         return create_matchup(id, round, home, away, start, playoff, season)
 
-    def create_matchup_result(self, home_win=0, away_win=0, games=[]):
+    def create_matchup_result(self, home_win=0, away_win=0, games=None):
         return MatchupResult(home_win, away_win, games)
 
     def create_matchup_tree(self):
