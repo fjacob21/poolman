@@ -1,6 +1,11 @@
 import requests
 
 
+FILTER_ALL = 1
+FILTER_SEASON = 2
+FILTER_PLAYOFF = 3
+
+
 class NHLGameGenerator(object):
 
     def __init__(self, factory, year, team, start='10-01', end='06-29'):
@@ -9,9 +14,25 @@ class NHLGameGenerator(object):
         self._team = team
         self._start = start
         self._end = end
+        self._filter = FILTER_ALL
 
     def generate(self):
         return self.get_games()
+    
+    def playoff_only(self):
+        self._start = '04-01'
+        self._end = '06-29'
+        self._filter = FILTER_PLAYOFF
+        
+    def season_only(self):
+        self._start = '10-01'
+        self._end = '04-29'
+        self._filter = FILTER_SEASON
+
+    def all_game(self):
+        self._start = '10-01'
+        self._end = '06-29'
+        self._filter = FILTER_ALL
 
     def create_nhl_extra_info(self, content, live):
         info = {}
@@ -41,11 +62,18 @@ class NHLGameGenerator(object):
                                          away_score, extra)
 
     def get_games(self):
-        url = 'https://statsapi.web.nhl.com/api/v1/schedule?startDate=' + str(self._year) + '-' + self._start + '&endDate=' + str(self._year + 1) + '-' + self._end + '&expand=schedule.teams,schedule.linescore,schedule.broadcasts,schedule.ticket,schedule.game.content.media.epg&leaderCategories=&site=en_nhlCA&teamId=' + str(self._team)
+        if self._filter == FILTER_PLAYOFF:
+            url = 'https://statsapi.web.nhl.com/api/v1/schedule?startDate=' + str(self._year+1) + '-' + self._start + '&endDate=' + str(self._year+1) + '-' + self._end + '&expand=schedule.teams,schedule.linescore,schedule.broadcasts,schedule.ticket,schedule.game.content.media.epg&leaderCategories=&site=en_nhlCA&teamId=' + str(self._team)
+        else:
+            url = 'https://statsapi.web.nhl.com/api/v1/schedule?startDate=' + str(self._year) + '-' + self._start + '&endDate=' + str(self._year+1) + '-' + self._end + '&expand=schedule.teams,schedule.linescore,schedule.broadcasts,schedule.ticket,schedule.game.content.media.epg&leaderCategories=&site=en_nhlCA&teamId=' + str(self._team)
         team_schedule = requests.get(url).json()
         db_games = []
         for date in team_schedule['dates']:
             game_json = date['games'][0]
-            game = self.extract_game_info(game_json)
-            db_games.append(game)
+            game_type = game_json['gameType']
+            if (self._filter == FILTER_ALL or
+                (self._filter == FILTER_SEASON and game_type == 'S') or
+                (self._filter == FILTER_PLAYOFF and game_type == 'P')):
+                game = self.extract_game_info(game_json)
+                db_games.append(game)
         return db_games
