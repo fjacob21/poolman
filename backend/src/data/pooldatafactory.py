@@ -5,7 +5,8 @@ from .standing import create_standing
 from .matchupresult import MatchupResult
 from .matchup import create_matchup
 from .matchuptree import create_matchup_tree
-from .matchuptreenode import STATE_UNITIALIZED, STATE_NOT_STARTED, STATE_STARTED, STATE_FINISHED
+from .matchuptreenode import STATE_UNITIALIZED, STATE_NOT_STARTED
+from .matchuptreenode import STATE_STARTED, STATE_FINISHED
 
 
 class PoolDataFactory(object):
@@ -14,7 +15,7 @@ class PoolDataFactory(object):
         self.GAME_STATE_SCHEDULED = GAME_STATE_SCHEDULED
         self.GAME_STATE_IN_PROGRESS = GAME_STATE_IN_PROGRESS
         self.GAME_STATE_FINISHED = GAME_STATE_FINISHED
-        
+
         self.STATE_UNITIALIZED = STATE_UNITIALIZED
         self.STATE_NOT_STARTED = STATE_NOT_STARTED
         self.STATE_STARTED = STATE_STARTED
