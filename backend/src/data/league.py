@@ -13,7 +13,7 @@ class League(PowerDict):
         league['name'] = name
         league['desc'] = desc
         league['website'] = website
-        league['teams'] = {}
+        league['teams'] = None
         league['years'] = {}
         self._data = league
 

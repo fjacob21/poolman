@@ -8,12 +8,18 @@ class NHLMatchupTreeUpdater(object):
         self._year = year
         self._tree = tree
         self._standings = standings
+        self._updated = False
+
+    @property
+    def updated(self):
+        return self._updated
 
     def update_matchup(self, node):
         matchup = node.matchup
-        g = NHLGameGenerator(self._factory, 2016, matchup.home)
+        g = NHLGameGenerator(self._factory, self._year, matchup.home)
         g.playoff_only()
         games = g.generate()
+        self._updated = False
         for game in games:
             if ((game.home == matchup.home) and (game.away == matchup.away) or
                (game.home == matchup.away) and (game.away == matchup.home)):
@@ -27,17 +33,19 @@ class NHLMatchupTreeUpdater(object):
             node.state = self._factory.STATE_FINISHED
             if not node.next:
                 return
-            if not node.next.matchup:
-                node.next.matchup = self._factory.create_matchup(node.next.id, node.round + 1, matchup.winner)
+            self._updated = True
+            next = self._tree[node.next]
+            if not next.matchup:
+                next.matchup = self._factory.create_matchup(next.id, node.round + 1, matchup.winner)
             else:
-                node.next.matchup.away = matchup.winner
+                next.matchup.away = matchup.winner
                 # Need to order teams!!!!!!!
-                home = self._standings[node.next.matchup.home]
-                away = self._standings[node.next.matchup.away]
+                home = self._standings[next.matchup.home]
+                away = self._standings[next.matchup.away]
                 if away.ranks['conference_rank'] < home.ranks['conference_rank']:
-                    t = node.next.matchup.home
-                    node.next.matchup.home = node.next.matchup.away
-                    node.next.matchup.away = t
+                    t = next.matchup.home
+                    next.matchup.home = next.matchup.away
+                    next.matchup.away = t
 
     def update(self):
         for node in self._tree.data.values():

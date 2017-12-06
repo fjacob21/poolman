@@ -7,6 +7,7 @@ from .matchup import create_matchup
 from .matchuptree import create_matchup_tree
 from .matchuptreenode import STATE_UNITIALIZED, STATE_NOT_STARTED
 from .matchuptreenode import STATE_STARTED, STATE_FINISHED
+from .league import create_league
 
 
 class PoolDataFactory(object):
@@ -47,3 +48,6 @@ class PoolDataFactory(object):
 
     def create_matchup_tree(self):
         return create_matchup_tree()
+
+    def create_league(self, name, desc='', website=''):
+        return create_league(name, desc, website)

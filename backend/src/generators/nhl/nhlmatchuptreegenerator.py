@@ -4,8 +4,10 @@ from .nhlstandinggenerator import NHLStandingGenerator
 
 class NHLMatchupTreeGenerator(object):
 
-    def __init__(self, factory, year):
+    def __init__(self, factory, year, teams=None, standings=None):
         self._factory = factory
+        self._teams = teams
+        self._standings = standings
         self._year = year
 
     def generate(self):
@@ -15,32 +17,32 @@ class NHLMatchupTreeGenerator(object):
         tree = self._factory.create_matchup_tree()
         tree.create_node('sc', 4, next=None)
 
-        tree.create_node('e', 3, next=tree.sc)
-        tree.create_node('w', 3, next=tree.sc)
+        tree.create_node('e', 3, next='sc')
+        tree.create_node('w', 3, next='sc')
 
-        tree.create_node('a', 2, next=tree.e)
-        tree.create_node('m', 2, next=tree.e)
-        tree.create_node('c', 2, next=tree.w)
-        tree.create_node('p', 2, next=tree.w)
+        tree.create_node('a', 2, next='e')
+        tree.create_node('m', 2, next='e')
+        tree.create_node('c', 2, next='w')
+        tree.create_node('p', 2, next='w')
 
-        tree.create_node('a1', 1, next=tree.a)
-        tree.create_node('a2', 1, next=tree.a)
-        tree.create_node('m1', 1, next=tree.m)
-        tree.create_node('m2', 1, next=tree.m)
-        tree.create_node('c1', 1, next=tree.c)
-        tree.create_node('c2', 1, next=tree.c)
-        tree.create_node('p1', 1, next=tree.p)
-        tree.create_node('p2', 1, next=tree.p)
+        tree.create_node('a1', 1, next='a')
+        tree.create_node('a2', 1, next='a')
+        tree.create_node('m1', 1, next='m')
+        tree.create_node('m2', 1, next='m')
+        tree.create_node('c1', 1, next='c')
+        tree.create_node('c2', 1, next='c')
+        tree.create_node('p1', 1, next='p')
+        tree.create_node('p2', 1, next='p')
 
-        tree.update_node_links('sc', tree.e, tree.w)
+        tree.update_node_links('sc', 'e', 'w')
 
-        tree.update_node_links('w', tree.p, tree.c)
-        tree.update_node_links('e', tree.m, tree.a)
+        tree.update_node_links('w', 'p', 'c')
+        tree.update_node_links('e', 'm', 'a')
 
-        tree.update_node_links('c', tree.c2, tree.c1)
-        tree.update_node_links('p', tree.p2, tree.p1)
-        tree.update_node_links('a', tree.a2, tree.a1)
-        tree.update_node_links('m', tree.m2, tree.m1)
+        tree.update_node_links('c', 'c2', 'c1')
+        tree.update_node_links('p', 'p2', 'p1')
+        tree.update_node_links('a', 'a2', 'a1')
+        tree.update_node_links('m', 'm2', 'm1')
         return tree
 
     def calculate_standing(self):
@@ -48,7 +50,7 @@ class NHLMatchupTreeGenerator(object):
                         'teams': []}, 'Western': {'Central': [], 'Pacific': [],
                         'teams': []}, 'teams': []}
 
-        league = sorted(self._standing.values(), key=lambda k: int(k.ranks['division_rank']))
+        league = sorted(self._standings.values(), key=lambda k: int(k.ranks['division_rank']))
         for team in league:
             db_standings['teams'].append(team)
             id = team.team_id
@@ -105,10 +107,12 @@ class NHLMatchupTreeGenerator(object):
         self._tree.p2['matchup'] = self._factory.create_matchup('p2', 1, self._nhlstanding['Western']['Pacific'][1].team_id, self._nhlstanding['Western']['Pacific'][2].team_id)
 
     def get_matchuptree(self):
-        t = NHLTeamGenerator(self._factory)
-        self._teams = t.generate()
-        s = NHLStandingGenerator(self._factory, self._year)
-        self._standing = s.generate()
+        if self._teams is None:
+            t = NHLTeamGenerator(self._factory)
+            self._teams = t.generate()
+        if self._standings is None:
+            s = NHLStandingGenerator(self._factory, self._year)
+            self._standings = s.generate()
 
         self._tree = self.create_initial_tree()
         self._nhlstanding = self.calculate_standing()
