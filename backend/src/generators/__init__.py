@@ -1,5 +1,5 @@
 from .nhl import NHLTeamGenerator, NHLGameGenerator, NHLStandingGenerator
-from .nhl import NHLMatchupTreeGenerator, NHLMatchupTreeUpdater
+from .nhl import NHLMatchupTreeGenerator, NHLMatchupTreeUpdater, NHLGenerator
 
 __all__ = [NHLTeamGenerator, NHLGameGenerator, NHLStandingGenerator,
-           NHLMatchupTreeGenerator, NHLMatchupTreeUpdater]
+           NHLMatchupTreeGenerator, NHLMatchupTreeUpdater, NHLGenerator]

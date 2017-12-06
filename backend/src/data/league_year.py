@@ -9,5 +9,5 @@ class LeagueYear(PowerDict):
         league_year['year'] = year
         league_year['standings'] = {}
         league_year['matchups'] = create_matchup_tree()
-        league_year['teams'] = {}
+        league_year['teams_games'] = {}
         self._data = league_year

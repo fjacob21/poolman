@@ -18,12 +18,12 @@ class NHLGameGenerator(object):
 
     def generate(self):
         return self.get_games()
-    
+
     def playoff_only(self):
         self._start = '04-01'
         self._end = '06-29'
         self._filter = FILTER_PLAYOFF
-        
+
     def season_only(self):
         self._start = '10-01'
         self._end = '04-29'
@@ -72,8 +72,8 @@ class NHLGameGenerator(object):
             game_json = date['games'][0]
             game_type = game_json['gameType']
             if (self._filter == FILTER_ALL or
-                (self._filter == FILTER_SEASON and game_type == 'S') or
-                (self._filter == FILTER_PLAYOFF and game_type == 'P')):
+               (self._filter == FILTER_SEASON and game_type == 'R') or
+               (self._filter == FILTER_PLAYOFF and game_type == 'P')):
                 game = self.extract_game_info(game_json)
                 db_games.append(game)
         return db_games
