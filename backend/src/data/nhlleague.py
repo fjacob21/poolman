@@ -1,12 +1,12 @@
 from .powerdict import PowerDict
-from .league_year import LeagueYear
+from .nhlleague_year import NHLLeagueYear
 
 
 def create_league(name, desc='', website=''):
-    return League(name, desc, website)
+    return NHLLeague(name, desc, website)
 
 
-class League(PowerDict):
+class NHLLeague(PowerDict):
 
     def __init__(self, name='', desc='', website=''):
         league = {}
@@ -18,5 +18,5 @@ class League(PowerDict):
         self._data = league
 
     def add_year(self, year):
-        self.years[year] = LeagueYear(year)
+        self.years[year] = NHLLeagueYear(year)
         return self.years[year]

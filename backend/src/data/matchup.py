@@ -1,4 +1,4 @@
-from .game import create_game, GAME_STATE_SCHEDULED, GAME_STATE_FINISHED
+from .game import GAME_STATE_SCHEDULED, GAME_STATE_FINISHED
 from .matchupresult import MatchupResult
 from .powerdict import PowerDict
 
@@ -28,20 +28,23 @@ class Matchup(PowerDict):
 
     def add_playoff_game(self, date='', state=GAME_STATE_SCHEDULED,
                          home_goal=0, away_goal=0, extra_data=None):
-        return self.playoff.add_game(self.home, self.away, date, state, home_goal,
-                                     away_goal, extra_data)
+        return self.playoff.add_game(self.home, self.away, date, state,
+                                     home_goal, away_goal, extra_data)
 
     def add_season_game(self, date, home_goal, away_goal, extra_data=None):
-        return self.season.add_game(self.home, self.away, date, GAME_STATE_FINISHED,
-                                    home_goal, away_goal, extra_data)
+        return self.season.add_game(self.home, self.away, date,
+                                    GAME_STATE_FINISHED, home_goal, away_goal,
+                                    extra_data)
 
     @property
     def winner(self):
-        if self.playoff.home_win == 4:
-            return self.home
-        if self.playoff.away_win == 4:
-            return self.away
         return None
+
+    @property
+    def win_games(self):
+        if not self.winner:
+            return 0
+        return self.playoff.home_win + self.playoff.away_win
 
     @property
     def started(self):

@@ -1,6 +1,7 @@
 from .matchuptreenode import MatchupTreeNode, STATE_UNITIALIZED
 from .powerdict import PowerDict
 
+
 def create_matchup_tree():
     return MatchupTree()
 
@@ -15,7 +16,7 @@ class MatchupTree(PowerDict):
     def create_node(self, id, round, right=None, left=None, next=None,
                     matchup=None, state=STATE_UNITIALIZED):
         self._data[id] = MatchupTreeNode(id, round, right, left, next,
-                                          matchup, state)
+                                         matchup, state)
 
     def update_node_links(self, id, right=None, left=None, next=None):
         if right:
