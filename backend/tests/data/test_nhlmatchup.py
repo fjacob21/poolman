@@ -1,8 +1,8 @@
 import unittest
-from data import create_matchup, GAME_STATE_FINISHED
+from data import NHLPoolDataFactory, GAME_STATE_FINISHED
 
 
-class TestMatchupMethods(unittest.TestCase):
+class TestNHLMatchupMethods(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -13,7 +13,8 @@ class TestMatchupMethods(unittest.TestCase):
         pass
 
     def setUp(self):
-        self.m1 = create_matchup('m1', 1, 1, 2, '2017-04-10T00:41:45Z')
+        f = NHLPoolDataFactory()
+        self.m1 = f.create_matchup('m1', 1, 1, 2, '2017-04-10T00:41:45Z')
         self.extra_data = {'test': 'test'}
         self.gs = self.m1.add_season_game('2017-04-10T00:41:45Z', 1, 0, self.extra_data)
         self.gp = self.m1.add_playoff_game('2017-04-10T00:41:45Z', GAME_STATE_FINISHED,
@@ -54,7 +55,7 @@ class TestMatchupMethods(unittest.TestCase):
                                  1, 0, self.extra_data)
         self.m1.add_playoff_game('2017-04-10T00:41:45Z', GAME_STATE_FINISHED,
                                  1, 0, self.extra_data)
-        self.assertEqual(self.m1.winner, None)
+        self.assertEqual(self.m1.winner, 1)
 
     def test_find_game(self):
         self.assertIsNone(self.m1.season.find_game(''))

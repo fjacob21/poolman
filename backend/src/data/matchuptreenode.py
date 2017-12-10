@@ -9,7 +9,7 @@ STATE_FINISHED = 4
 
 class MatchupTreeNode(PowerDict):
 
-    def __init__(self, id, round, right=None, left=None, next=None,
+    def __init__(self, id=0, round=0, right=None, left=None, next=None,
                  matchup=None, state=STATE_UNITIALIZED):
         node = {}
         node['id'] = id

@@ -15,15 +15,6 @@ class NHLGenerator(object):
                                                  'https://www.nhl.com/')
         self._league = league
 
-    def is_year_finished(self, year):
-        league_year = self._league.years[year]
-        if len(league_year.standings) == 0:
-            return False
-        for standing in league_year.standings.values():
-            if standing.games_played != 82:
-                return False
-        return True
-
     def generate(self, year):
         self.update_teams()
         if year not in self._league.years:
@@ -46,7 +37,7 @@ class NHLGenerator(object):
 
     def update_year_info(self, year):
         league_year = self._league.years[year]
-        if self.is_year_finished(year):
+        if league_year.is_year_finished:
             u = NHLMatchupTreeUpdater(self._factory,
                                       year,
                                       league_year.standings,
@@ -57,12 +48,12 @@ class NHLGenerator(object):
 
     def generate_year_info(self, year):
         league_year = self._league.years[year]
-        if not self.is_year_finished(year):
+        if not league_year.is_year_finished:
             s = NHLStandingGenerator(self._factory, year)
             league_year.standings = s.generate()
             t = NHLMatchupTreeGenerator(self._factory, year,
                                         self._league.teams,
                                         league_year.standings)
             league_year.matchups = t.generate()
-            if self.is_year_finished(year):
+            if league_year.is_year_finished:
                 self.build_teams_games(year)

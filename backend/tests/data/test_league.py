@@ -18,7 +18,7 @@ class TestLeagueMethods(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_team(self):
+    def test_league(self):
         league = create_league('nhl', 'National Hockey league',
                                'https://www.nhl.com/')
         league_year = league.add_year(2000)
@@ -27,6 +27,7 @@ class TestLeagueMethods(unittest.TestCase):
         self.assertEqual(league.website, 'https://www.nhl.com/')
         self.assertEqual(league_year.year, 2000)
         self.assertIsNotNone(league.years[2000])
+        self.assertEqual(league_year.is_year_finished, False)
 
 
 if __name__ == '__main__':

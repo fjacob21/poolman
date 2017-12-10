@@ -1,5 +1,6 @@
 import json
 from .powerdict import PowerDict
+import sys
 
 
 class PowerDictEncoder(json.JSONEncoder):
@@ -13,13 +14,18 @@ class PowerDictEncoder(json.JSONEncoder):
 
 class PowerDictDecoder(json.JSONDecoder):
     def __init__(self, *args, **kwargs):
-        json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
+        self._pack =  sys.modules[__name__]
+        if 'pack' in kwargs:
+            self._pack = kwargs['pack']
+        json.JSONDecoder.__init__(self, object_hook=self.object_hook)  # ,
+        # *args, **kwargs)
 
     def object_hook(self, obj):
         if '__objectname__' not in obj:
             return obj
         type = obj['__objectname__']
-        newobj = globals()[type]()
+        newobjclass = getattr(self._pack, type)  # globals()[type]()
+        newobj = newobjclass()
         newobj._data = obj
         del newobj._data['__objectname__']
         return newobj
