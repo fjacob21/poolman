@@ -13,7 +13,7 @@ class TestMatchupMethods(unittest.TestCase):
         pass
 
     def setUp(self):
-        self.m1 = create_matchup('m1', 1, 1, 2, '2017-04-10T00:41:45Z')
+        self.m1 = create_matchup('m1', 1, 1, 2)
         self.extra_data = {'test': 'test'}
         self.gs = self.m1.add_season_game('2017-04-10T00:41:45Z', 1, 0, self.extra_data)
         self.gp = self.m1.add_playoff_game('2017-04-10T00:41:45Z', GAME_STATE_FINISHED,
