@@ -3,9 +3,9 @@ from .matchup import Matchup
 
 class NHLMatchup(Matchup):
 
-    def __init__(self, mid=0, round=0, home=0, away=0, start='',
+    def __init__(self, mid=0, round=0, home=0, away=0,
                  playoff=None, season=None):
-        Matchup.__init__(self, mid, round, home, away, start, playoff, season)
+        Matchup.__init__(self, mid, round, home, away, playoff, season)
 
     @property
     def winner(self):

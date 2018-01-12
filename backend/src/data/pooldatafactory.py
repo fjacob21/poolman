@@ -39,9 +39,9 @@ class PoolDataFactory(object):
         return create_standing(team_id, pts, win, losses, ot, games_played,
                                goals_against, goals_scored, ranks, extra_info)
 
-    def create_matchup(self, id=0, round=0, home=0, away=0, start='',
+    def create_matchup(self, id=0, round=0, home=0, away=0,
                        playoff=None, season=None):
-        return create_matchup(id, round, home, away, start, playoff, season)
+        return create_matchup(id, round, home, away, playoff, season)
 
     def create_matchup_result(self, home_win=0, away_win=0, games=None):
         return MatchupResult(home_win, away_win, games)

@@ -1,16 +1,17 @@
+from .dateutils import string_to_date, date_to_string, now
 from .game import GAME_STATE_SCHEDULED, GAME_STATE_FINISHED
 from .matchupresult import MatchupResult
 from .powerdict import PowerDict
 
 
-def create_matchup(id=0, round=0, home=0, away=0, start='',
+def create_matchup(id=0, round=0, home=0, away=0,
                    playoff=None, season=None):
-    return Matchup(id, round, home, away, start, playoff, season)
+    return Matchup(id, round, home, away, playoff, season)
 
 
 class Matchup(PowerDict):
 
-    def __init__(self, mid=0, round=0, home=0, away=0, start='',
+    def __init__(self, mid=0, round=0, home=0, away=0,
                  playoff=None, season=None):
         if not playoff:
             playoff = MatchupResult()
@@ -21,7 +22,6 @@ class Matchup(PowerDict):
         matchup['home'] = home
         matchup['away'] = away
         matchup['round'] = round
-        matchup['start'] = start
         matchup['playoff'] = playoff
         matchup['season'] = season
         self._data = matchup
@@ -47,5 +47,16 @@ class Matchup(PowerDict):
         return self.playoff.home_win + self.playoff.away_win
 
     @property
+    def start(self):
+        start = None
+        for game in self.playoff.games:
+            s = string_to_date(game.date)
+            if not start or s < start:
+                start = s
+        return date_to_string(start)
+
+    @property
     def started(self):
-        return False
+        n = now()
+        s = string_to_date(self.start)
+        return n > s
